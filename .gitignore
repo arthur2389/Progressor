@@ -1,0 +1,4 @@
+# ignore all pycache files
+**/__pycache__
+**/.idea
+*.pyc
