@@ -10,7 +10,7 @@ from Framework.ExpandWithFramework import ExpandWithFramework
 
 class Progressor(metaclass=ExpandWithFramework):
     """
-    Main utility of the app core is also called by the app name - and is viewed as the main
+    Main class of the app core is also called by the app name - and is viewed as the main
     module of the system's source code. Controls and mediates all the actions
     of the core sub system
     """
@@ -25,6 +25,12 @@ class Progressor(metaclass=ExpandWithFramework):
             goals.update({name: GoalFactory.create_goal(data)})
         return goals
 
+    def items(self):
+        """
+        return: iterator over the goals of the progressor
+        """
+        return self._goals.items()
+
     def add_goal(self, creation_data):
         self._goals.update({creation_data.goal_name: GoalFactory.create_goal(creation_data)})
 
@@ -33,4 +39,7 @@ class Progressor(metaclass=ExpandWithFramework):
         param name: goal name
         return: goal object
         """
-        return self._goals[name]
+        try:
+            return self._goals[name]
+        except KeyError:
+            raise KeyError('goal with name {0} does not exists'.format(name))

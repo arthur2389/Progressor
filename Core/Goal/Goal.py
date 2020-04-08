@@ -2,6 +2,8 @@
 # All rights reserved
 # Author: Arthur Farber
 # Date: April 2020
+import abc
+
 from EnumTypes import *
 from Framework.ExpandWithFramework import ExpandWithFramework
 
@@ -39,6 +41,9 @@ class Goal(metaclass=ExpandWithFramework):
         self._dates = self._Stages(st=self.fw.date_handler.date_from_str(data.start_date),
                                    curr=self.fw.date_handler.today(),
                                    end=self.fw.date_handler.date_from_str(data.end_date))
+        self._values = self._Stages(st=self._data_process(data.start_value),
+                                    curr=self._data_process(data.curr_value),
+                                    end=self._data_process(data.goal_value))
 
         self._status = self._define_status()
 
@@ -57,14 +62,14 @@ class Goal(metaclass=ExpandWithFramework):
     def start_value(self):
         return self._values[EStage.START]
 
-    def end_value(self):
+    def goal_value(self):
         return self._values[EStage.END]
 
     def curr_value(self):
         return self._values[EStage.CURRENT]
 
     def set_curr_value(self, val):
-        self._values[EStage.CURRENT] = val
+        self._values[EStage.CURRENT] = self._data_process(val)
 
     def completion_rate(self):
         """
@@ -82,6 +87,10 @@ class Goal(metaclass=ExpandWithFramework):
             return self.completion_rate()
         return round(self.completion_rate() / self._dates.completed_pct(), 2)
 
+    @abc.abstractmethod
+    def _data_process(self, v):
+        pass
+
     def _define_status(self):
         """
         return: goal current status right to this day (EGoalStatus)
@@ -98,30 +107,24 @@ class Goal(metaclass=ExpandWithFramework):
 
 class QuantifiedGoal(Goal):
 
-    def __init__(self, data):
-        super(QuantifiedGoal, self).__init__(data)
-        self._values = self._Stages(st=float(data.start_value),
-                                    curr=float(data.curr_value),
-                                    end=float(data.goal_value))
+    def _data_process(self, v):
+        return float(v)
 
 
 class TimeBasedGoal(Goal):
 
-    def __init__(self, data):
-        super(TimeBasedGoal, self).__init__(data)
-        self._values = self._Stages(st=float(self.fw.time_handler.time_format_to_sec(data.start_value)),
-                                    curr=float(self.fw.time_handler.time_format_to_sec(data.curr_value)),
-                                    end=float(self.fw.time_handler.time_format_to_sec(data.goal_value)))
+    def _data_process(self, v):
+        return float(self.fw.time_handler.time_format_to_sec(v))
 
 
 class TermBasedGoal(Goal):
 
     def __init__(self, data):
         super(TermBasedGoal, self).__init__(data)
-        self._values = self._Stages(st=data.start_value,
-                                    curr=data.curr_value,
-                                    end=data.goal_value)
         self._terms = data.terms
+
+    def _data_process(self, v):
+        return v
 
     def completion_rate(self):
         """
@@ -135,6 +138,7 @@ class TermBasedGoal(Goal):
         """
         return 'N\A'
 
+    @property
     def terms(self):
         """
         return: the terms used in this goal
@@ -145,21 +149,18 @@ class TermBasedGoal(Goal):
 class EnumeratedTermsGoal(Goal):
 
     def __init__(self, data):
-        super(EnumeratedTermsGoal, self).__init__(data)
         self._terms = data.terms
         self._value_to_term_map = {v: k for k, v in data.terms.items()}
-        self._values = self._Stages(st=self.enum_value(data.start_value),
-                                    curr=self.enum_value(data.curr_value),
-                                    end=self.enum_value(data.goal_value))
+        super(EnumeratedTermsGoal, self).__init__(data)
 
-    def enum_value(self, k):
-        return float(self._terms[k])
+    def _data_process(self, v):
+        return float(self._terms[v])
 
     def start_value(self):
         sv = self._values[EStage.START]
         return sv, self._value_to_term_map[sv]
 
-    def end_value(self):
+    def goal_value(self):
         ev = self._values[EStage.END]
         return ev, self._value_to_term_map[ev]
 
@@ -167,9 +168,7 @@ class EnumeratedTermsGoal(Goal):
         cv = self._values[EStage.CURRENT]
         return cv, self._value_to_term_map[cv]
 
-    def set_curr_value(self, val):
-        self._values[EStage.CURRENT] = self.enum_value(val)
-
+    @property
     def terms(self):
         """
         return: the terms used in this goal
