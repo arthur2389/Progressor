@@ -113,4 +113,13 @@ class TermBasedGoal(Goal):
         """
         return: the terms used in this goal
         """
-        return set(self._values.as_dict().values())
+        return self._data.terms
+
+
+class EnumeratedTermsGoal(Goal):
+
+    def __init__(self, data):
+        super(EnumeratedTermsGoal, self).__init__(data)
+        self._values = self._Stages(st=data.start_value,
+                                    curr=data.curr_value,
+                                    end=data.goal_value)

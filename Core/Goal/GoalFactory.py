@@ -11,9 +11,34 @@ class GoalFactory(metaclass=ExpandWithFramework):
 
     @classmethod
     def create_goal(cls, data):
+        # first - check for the numeric types
         if data.type in [int, float]:
             return QuantifiedGoal(data)
+        # second - check if the goal represents a time value
+        if cls.fw.time_handler.is_time_format(data.start_value):
+            return TimeBasedGoal(data)
+        # now the input has to be string otherwise it is a bug - the string can be enumerated or not
         elif data.type is str:
-            if cls.fw.time_handler.is_time_format(data.start_value):
-                return TimeBasedGoal(data)
+            # in the input - a dictionary means that the terms are enumerated, a list is just list of terms
+            if type(data.terms) is dict:
+                return EnumeratedTermsGoal(data)
             return TermBasedGoal(data)
+        return NullGoal(data)
+
+
+class NullGoal(Goal):
+    """
+    The None of the Goal. Invalid type
+    """
+
+    def completion_rate(self):
+        """
+        return: goal completion rate right to this day
+        """
+        raise NotImplementedError
+
+    def completion_projection_at_end(self):
+        """
+        return: goal completion rate projected at the end day
+        """
+        raise NotImplementedError
