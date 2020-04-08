@@ -3,7 +3,6 @@
 # Author: Arthur Farber
 # Date: April 2020
 from datetime import date
-from EnumTypes import *
 
 
 class DateHandler(object):
@@ -19,5 +18,10 @@ class DateHandler(object):
 
     @staticmethod
     def date_from_str(_str):
+        """
+        date object from string
+        param _str: string value
+        return: date (datetime.date)
+        """
         _split_vals = list(map(int, _str.split('-')))
         return date(year=_split_vals[0], month=_split_vals[1], day=_split_vals[2])

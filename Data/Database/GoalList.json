@@ -38,5 +38,21 @@
 		"goal_value": "Expert",
 		"curr_value": "Expert",
 		"terms": ["Beginner", "Advanced", "Expert"]
+	},
+
+    "army service process": {
+		"start_date": "2016-1-1",
+		"end_date": "2030-1-1",
+		"start_value": "First lieutenant",
+		"goal_value": "Major General",
+		"curr_value": "Captain",
+		"terms": {"Second lieutenant": 1,
+                  "First lieutenant": 2,
+                  "Captain": 3,
+                  "Major": 4,
+                  "Lieutenant Colonel": 5,
+                  "Colonel": 7,
+                  "Brigadier General" : 9,
+                  "Major General": 14}
 	}
 }

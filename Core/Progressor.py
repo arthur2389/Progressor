@@ -27,3 +27,10 @@ class Progressor(metaclass=ExpandWithFramework):
 
     def add_goal(self, creation_data):
         self._goals.update({creation_data.goal_name: GoalFactory.create_goal(creation_data)})
+
+    def get_goal(self, name):
+        """
+        param name: goal name
+        return: goal object
+        """
+        return self._goals[name]

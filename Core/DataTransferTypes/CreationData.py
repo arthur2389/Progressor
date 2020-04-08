@@ -40,6 +40,8 @@ class CreationData(metaclass=ExpandWithFramework):
         self.goal_value = goal_value
         self.curr_value = start_value if curr_value is None else curr_value
 
+        self.type_of_date = type(start_date)
+
         if terms:
             # if terms are given check that the input values are aligned to them
             self.terms = terms
