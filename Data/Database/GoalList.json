@@ -1,0 +1,25 @@
+{
+  "maximum push ups": {"start_date": "2020-01-04",
+                       "end_date": "2020-06-20",
+                       "start_value": 25,
+                       "goal_value": 50,
+                       "curr_value": 28},
+
+  "chest bench press kg": {"start_date": "2018-1-30",
+                           "end_date": "2019-7-30",
+                           "start_value": 65,
+                           "goal_value": 110,
+                           "curr_value": 75},
+
+  "month salary": {"start_date": "2020-8-30",
+                   "end_date": "2022-8-30",
+                   "start_value": 14000,
+                   "goal_value": 23000,
+                   "curr_value": 14000},
+
+  "swimming 1km": {"start_date": "2020-1-30",
+                   "end_date": "2021-1-30",
+                   "start_value": "00:22:35",
+                   "goal_value": "00:18:35",
+                   "curr_value": "00:21:58"}
+}
