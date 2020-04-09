@@ -6,6 +6,7 @@
 from Framework.DataModerator.DataModerator import DataModerator
 from Framework.DateTimeHandler.DateHandler import DateHandler
 from Framework.DateTimeHandler.TimeHandler import TimeHandler
+from Framework.TypesSupport.TypesSupport import TypesSupport
 
 
 class Framework(object):
@@ -15,6 +16,7 @@ class Framework(object):
         self._data_moderator = DataModerator()
         self._date_handler = DateHandler()
         self._time_handler = TimeHandler()
+        self._types = TypesSupport()
 
     @property
     def time_handler(self):
@@ -27,6 +29,10 @@ class Framework(object):
     @property
     def data_moderator(self):
         return self._data_moderator
+
+    @property
+    def types(self):
+        return self._types
 
     def register_for_time_keeper(self, func):
         self._time_keeper_ops.append(func)

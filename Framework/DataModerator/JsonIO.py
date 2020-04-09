@@ -73,7 +73,7 @@ class JsonIO(object):
         # Change the field in read reference and dump the content
         JsonIO.parsed_data[file_path][field] = data
         with open(file_path, 'w') as file_to_write:
-            json.dump(JsonIO.parsed_data[file_path], file_to_write)
+            json.dump(JsonIO.parsed_data[file_path], file_to_write, indent=4)
         return JsonIO.parsed_data[file_path]
 
     @staticmethod

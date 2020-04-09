@@ -53,4 +53,4 @@ class Progressor(metaclass=ExpandWithFramework):
         return:
         """
         self.fw.data_moderator.write_data(parameter=goal.goal_name,
-                                          new_data=goal.as_dict())
+                                          new_data=goal.data.as_dict())

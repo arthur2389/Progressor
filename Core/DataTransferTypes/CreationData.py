@@ -50,5 +50,14 @@ class CreationData(metaclass=ExpandWithFramework):
         else:
             self.terms = None
 
+    def as_dict(self):
+        all_fileds = {"start_date": self.start_date,
+                      "end_date": self.end_date,
+                      "start_value": self.start_value,
+                      "goal_value": self.goal_value,
+                      "curr_value": self.curr_value,
+                      "terms": self.terms}
+        return {k: v for k, v in all_fileds.items() if v is not None}
+
     def __repr__(self):
         return self.__dict__.__repr__()

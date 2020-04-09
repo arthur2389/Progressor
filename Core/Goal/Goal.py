@@ -13,6 +13,10 @@ class Goal(metaclass=ExpandWithFramework):
     Class represents goals of the end user
     """
     class _Stages(object):
+        """
+        Stages private object is made for storing values for calculation of certain
+        properties of the goal
+        """
 
         def __init__(self, st, curr, end):
             self._stages = {EStage.START: st,
@@ -39,6 +43,7 @@ class Goal(metaclass=ExpandWithFramework):
         self._progressor = progressor
         self._name = data.goal_name
         self._values = None
+        self._data = data
         self._dates = self._Stages(st=self.fw.date_handler.date_from_str(data.start_date),
                                    curr=self.fw.date_handler.today(),
                                    end=self.fw.date_handler.date_from_str(data.end_date))
@@ -49,32 +54,31 @@ class Goal(metaclass=ExpandWithFramework):
         self._status = self._define_status()
 
     @property
+    def data(self):
+        return self._data
+
+    @property
     def goal_name(self):
         return self._name
 
-    @property
-    def start_date(self):
-        return self._dates[EStage.START]
+    def __getattr__(self, item):
+        """
+        param item: attribute to get
+        return: attribute value
+        """
+        return getattr(self._data, item)
 
-    @property
-    def end_date(self):
-        return self._dates[EStage.END]
-
-    @property
-    def start_value(self):
-        return self._values[EStage.START]
-
-    @property
-    def goal_value(self):
-        return self._values[EStage.END]
-
-    @property
-    def curr_value(self):
-        return self._values[EStage.CURRENT]
-
-    @curr_value.setter
-    def curr_value(self, val):
+    def set_curr_value(self, val):
+        """
+        current value setter. current value is the only field that can be set in the goal
+        during the goal's life
+        param val: new value for current value
+        """
+        if self._status != EGoalStatus.IN_PROGRESS:
+            raise NotImplementedError('Cannot set value to finished or not started goal')
+        val = self.fw.types.try_int_cast(val)
         self._values[EStage.CURRENT] = self._data_process(val)
+        self._data.curr_value = val
         self._progressor.dump_to_database(self)
 
     def completion_rate(self):
@@ -96,13 +100,6 @@ class Goal(metaclass=ExpandWithFramework):
     @abc.abstractmethod
     def _data_process(self, v):
         pass
-
-    def as_dict(self):
-        return {"start_date": str(self.start_date),
-                "end_date": str(self.end_date),
-                "start_value": self.start_value,
-                "goal_value": self.goal_value,
-                "curr_value": self.curr_value}
 
     def _define_status(self):
         """
@@ -151,18 +148,6 @@ class TermBasedGoal(Goal):
         """
         return 'N\A'
 
-    @property
-    def terms(self):
-        """
-        return: the terms used in this goal
-        """
-        return self._terms
-
-    def as_dict(self):
-        d = super(TermBasedGoal, self).as_dict()
-        d.update({"terms": self.terms})
-        return d
-
 
 class EnumeratedTermsGoal(Goal):
 
@@ -173,24 +158,3 @@ class EnumeratedTermsGoal(Goal):
 
     def _data_process(self, v):
         return float(self._terms[v])
-
-    def start_value(self):
-        return self._value_to_term_map[self._values[EStage.START]]
-
-    def goal_value(self):
-        return self._value_to_term_map[self._values[EStage.END]]
-
-    def curr_value(self):
-        return self._value_to_term_map[self._values[EStage.CURRENT]]
-
-    @property
-    def terms(self):
-        """
-        return: the terms used in this goal
-        """
-        return self._terms
-
-    def as_dict(self):
-        d = super(EnumeratedTermsGoal, self).as_dict()
-        d.update({"terms": self.terms})
-        return d
