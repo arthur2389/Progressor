@@ -88,4 +88,4 @@ class JsonIO(object):
         # Change the field in read reference and dump the content
         JsonIO.parsed_data[file_path] = data
         with open(file_path, 'w') as file_to_write:
-            json.dump(data, file_to_write)
+            json.dump(data, file_to_write, indent=4)

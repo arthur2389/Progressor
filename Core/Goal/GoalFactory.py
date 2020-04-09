@@ -10,20 +10,20 @@ from Framework.ExpandWithFramework import ExpandWithFramework
 class GoalFactory(metaclass=ExpandWithFramework):
 
     @classmethod
-    def create_goal(cls, data):
+    def create_goal(cls, progressor, data):
         # first - check for the numeric types
         if data.type in [int, float]:
-            return QuantifiedGoal(data)
+            return QuantifiedGoal(progressor, data)
         # second - check if the goal represents a time value
         if cls.fw.time_handler.is_time_format(data.start_value):
-            return TimeBasedGoal(data)
+            return TimeBasedGoal(progressor, data)
         # now the input has to be string otherwise it is a bug - the string can be enumerated or not
         elif data.type is str:
             # in the input - a dictionary means that the terms are enumerated, a list is just list of terms
             if type(data.terms) is dict:
-                return EnumeratedTermsGoal(data)
-            return TermBasedGoal(data)
-        return NullGoal(data)
+                return EnumeratedTermsGoal(progressor, data)
+            return TermBasedGoal(progressor, data)
+        return NullGoal(progressor, data)
 
 
 class NullGoal(Goal):

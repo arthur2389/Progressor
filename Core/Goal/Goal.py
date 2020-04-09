@@ -32,10 +32,11 @@ class Goal(metaclass=ExpandWithFramework):
             return (abs(self._stages[EStage.CURRENT] - self._stages[EStage.START])
                     / abs(self._stages[EStage.END] - self._stages[EStage.START]))
 
-    def __init__(self, data):
+    def __init__(self, progressor, data):
         """
         param data:
         """
+        self._progressor = progressor
         self._name = data.goal_name
         self._values = None
         self._dates = self._Stages(st=self.fw.date_handler.date_from_str(data.start_date),
@@ -59,17 +60,22 @@ class Goal(metaclass=ExpandWithFramework):
     def end_date(self):
         return self._dates[EStage.END]
 
+    @property
     def start_value(self):
         return self._values[EStage.START]
 
+    @property
     def goal_value(self):
         return self._values[EStage.END]
 
+    @property
     def curr_value(self):
         return self._values[EStage.CURRENT]
 
-    def set_curr_value(self, val):
+    @curr_value.setter
+    def curr_value(self, val):
         self._values[EStage.CURRENT] = self._data_process(val)
+        self._progressor.dump_to_database(self)
 
     def completion_rate(self):
         """
@@ -90,6 +96,13 @@ class Goal(metaclass=ExpandWithFramework):
     @abc.abstractmethod
     def _data_process(self, v):
         pass
+
+    def as_dict(self):
+        return {"start_date": str(self.start_date),
+                "end_date": str(self.end_date),
+                "start_value": self.start_value,
+                "goal_value": self.goal_value,
+                "curr_value": self.curr_value}
 
     def _define_status(self):
         """
@@ -119,8 +132,8 @@ class TimeBasedGoal(Goal):
 
 class TermBasedGoal(Goal):
 
-    def __init__(self, data):
-        super(TermBasedGoal, self).__init__(data)
+    def __init__(self, progressor, data):
+        super(TermBasedGoal, self).__init__(progressor, data)
         self._terms = data.terms
 
     def _data_process(self, v):
@@ -145,28 +158,30 @@ class TermBasedGoal(Goal):
         """
         return self._terms
 
+    def as_dict(self):
+        d = super(TermBasedGoal, self).as_dict()
+        d.update({"terms": self.terms})
+        return d
+
 
 class EnumeratedTermsGoal(Goal):
 
-    def __init__(self, data):
+    def __init__(self, progressor, data):
         self._terms = data.terms
         self._value_to_term_map = {v: k for k, v in data.terms.items()}
-        super(EnumeratedTermsGoal, self).__init__(data)
+        super(EnumeratedTermsGoal, self).__init__(progressor, data)
 
     def _data_process(self, v):
         return float(self._terms[v])
 
     def start_value(self):
-        sv = self._values[EStage.START]
-        return sv, self._value_to_term_map[sv]
+        return self._value_to_term_map[self._values[EStage.START]]
 
     def goal_value(self):
-        ev = self._values[EStage.END]
-        return ev, self._value_to_term_map[ev]
+        return self._value_to_term_map[self._values[EStage.END]]
 
     def curr_value(self):
-        cv = self._values[EStage.CURRENT]
-        return cv, self._value_to_term_map[cv]
+        return self._value_to_term_map[self._values[EStage.CURRENT]]
 
     @property
     def terms(self):
@@ -174,3 +189,8 @@ class EnumeratedTermsGoal(Goal):
         return: the terms used in this goal
         """
         return self._terms
+
+    def as_dict(self):
+        d = super(EnumeratedTermsGoal, self).as_dict()
+        d.update({"terms": self.terms})
+        return d

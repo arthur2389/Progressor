@@ -15,6 +15,7 @@ class Progressor(metaclass=ExpandWithFramework):
     of the core sub system
     """
     def __init__(self):
+        self.factory = GoalFactory
         self._goals = self._load_goals()
 
     def _load_goals(self):
@@ -22,7 +23,7 @@ class Progressor(metaclass=ExpandWithFramework):
         goal_data = self.fw.data_moderator.get_data()
         for name, goal in goal_data.items():
             data = CreationData.build_from_dict(name, goal)
-            goals.update({name: GoalFactory.create_goal(data)})
+            goals.update({name: self.factory.create_goal(self, data)})
         return goals
 
     def items(self):
@@ -32,7 +33,9 @@ class Progressor(metaclass=ExpandWithFramework):
         return self._goals.items()
 
     def add_goal(self, creation_data):
-        self._goals.update({creation_data.goal_name: GoalFactory.create_goal(creation_data)})
+        g = self.factory.create_goal(self, creation_data)
+        self._goals.update({creation_data.goal_name: g})
+        self.dump_to_database(g)
 
     def get_goal(self, name):
         """
@@ -43,3 +46,11 @@ class Progressor(metaclass=ExpandWithFramework):
             return self._goals[name]
         except KeyError:
             raise KeyError('goal with name {0} does not exists'.format(name))
+
+    def dump_to_database(self, goal):
+        """
+        param goal:
+        return:
+        """
+        self.fw.data_moderator.write_data(parameter=goal.goal_name,
+                                          new_data=goal.as_dict())
