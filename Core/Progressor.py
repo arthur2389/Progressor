@@ -18,14 +18,6 @@ class Progressor(metaclass=ExpandWithFramework):
         self.factory = GoalFactory
         self._goals = self._load_goals()
 
-    def _load_goals(self):
-        goals = {}
-        goal_data = self.fw.data_moderator.get_data()
-        for name, goal in goal_data.items():
-            data = CreationData.build_from_dict(name, goal)
-            goals.update({name: self.factory.create_goal(self, data)})
-        return goals
-
     def items(self):
         """
         return: iterator over the goals of the progressor
@@ -33,9 +25,24 @@ class Progressor(metaclass=ExpandWithFramework):
         return self._goals.items()
 
     def add_goal(self, creation_data):
+        """
+        Add new goal
+        param creation_data: gaol creation data
+        """
         g = self.factory.create_goal(self, creation_data)
         self._goals.update({creation_data.goal_name: g})
         self.dump_to_database(g)
+
+    def remove_goal(self, name):
+        """
+        Delete a goal
+        param goal_name: name of the goal
+        """
+        try:
+            del self._goals[name]
+        except KeyError:
+            raise KeyError('goal with name {0} does not exists'.format(name))
+        self.fw.data_moderator.delete_data(parameter=name)
 
     def get_goal(self, name):
         """
@@ -49,8 +56,20 @@ class Progressor(metaclass=ExpandWithFramework):
 
     def dump_to_database(self, goal):
         """
-        param goal:
-        return:
+        Append goal data to the database
+        param goal: goal to sump to database
         """
         self.fw.data_moderator.write_data(parameter=goal.goal_name,
                                           new_data=goal.data.as_dict())
+
+    def _load_goals(self):
+        """
+        Load goals from the database into 'Goal' type objects
+        return: dict {str: Goal}
+        """
+        goals = {}
+        goal_data = self.fw.data_moderator.get_data()
+        for name, goal in goal_data.items():
+            data = CreationData.build_from_dict(name, goal)
+            goals.update({name: self.factory.create_goal(self, data)})
+        return goals

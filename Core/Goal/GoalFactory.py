@@ -8,6 +8,10 @@ from Framework.ExpandWithFramework import ExpandWithFramework
 
 
 class GoalFactory(metaclass=ExpandWithFramework):
+    """
+    Goal factory class holds all the logic about what goal class to create and how,
+    by looking the the creation data object.
+    """
 
     @classmethod
     def create_goal(cls, progressor, data):
@@ -23,22 +27,29 @@ class GoalFactory(metaclass=ExpandWithFramework):
             if type(data.terms) is dict:
                 return EnumeratedTermsGoal(progressor, data)
             return TermBasedGoal(progressor, data)
+        # invalid state will lead to creation of Null goal. it was made to prevent immediate failure
         return NullGoal(progressor, data)
 
 
 class NullGoal(Goal):
     """
-    The None of the Goal. Invalid type
+    The None of the Goal. Invalid type.
     """
 
+    def __init__(self, *args, **kwargs):
+        """
+        safe init without calling parent init
+        """
+        pass
+
+    def __getattr__(self, item):
+        raise NotImplementedError('working with invalid goal')
+
     def completion_rate(self):
-        """
-        return: goal completion rate right to this day
-        """
-        raise NotImplementedError
+        raise NotImplementedError('working with invalid goal')
 
     def completion_projection_at_end(self):
-        """
-        return: goal completion rate projected at the end day
-        """
-        raise NotImplementedError
+        raise NotImplementedError('working with invalid goal')
+
+    def _data_process(self, v):
+        pass

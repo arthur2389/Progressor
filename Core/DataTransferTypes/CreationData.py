@@ -6,12 +6,17 @@ from Framework.ExpandWithFramework import ExpandWithFramework
 
 
 class CreationData(metaclass=ExpandWithFramework):
+    """
+    Raw data of the goals. Generic to all goal types
+    """
 
     @classmethod
     def build_from_dict(cls, name, data_as_dict):
         """
-        param data_as_dict:
-        return:
+        Build CreationData object from dictionary. Useful when loading data of the database
+        param name: goal name (str)
+        param data_as_dict: goal data as dict (dict)
+        return: CreationData loaded object
         """
         return cls(goal_name=name, **data_as_dict)
 
@@ -51,6 +56,9 @@ class CreationData(metaclass=ExpandWithFramework):
             self.terms = None
 
     def as_dict(self):
+        """
+        return: dict representation - mainly for dump operations
+        """
         all_fileds = {"start_date": self.start_date,
                       "end_date": self.end_date,
                       "start_value": self.start_value,
@@ -60,4 +68,4 @@ class CreationData(metaclass=ExpandWithFramework):
         return {k: v for k, v in all_fileds.items() if v is not None}
 
     def __repr__(self):
-        return self.__dict__.__repr__()
+        return str(self.goal_name) + ": " + str(self.as_dict())

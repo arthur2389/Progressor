@@ -78,6 +78,22 @@ class JsonIO(object):
 
     @staticmethod
     @json_io_method
+    def delete(file_path, field):
+        """
+        Delete a field from a file
+        param file_path: file path
+        param field: field name
+        """
+        if file_path not in JsonIO.parsed_data or field not in JsonIO.parsed_data[file_path]:
+            raise NameError('file path or field name input to JsonIO are invalid')
+
+        del JsonIO.parsed_data[file_path][field]
+
+        with open(file_path, 'w') as file_to_write:
+            json.dump(JsonIO.parsed_data[file_path], file_to_write, indent=4)
+
+    @staticmethod
+    @json_io_method
     def write(file_path, data):
         """
         Method won't support keyword arguments !!!

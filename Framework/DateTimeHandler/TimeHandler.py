@@ -2,13 +2,16 @@
 # All rights reserved
 # Author: Arthur Farber
 # Date: April 2020
+
 from datetime import time
 
 
 class TimeHandler(object):
 
     class TimeExpansion(time):
-
+        """
+        Expansion of python's datetime.time for arithmetic operations
+        """
         MIN_FACTOR = 60
         HOUR_FACTOR = 3600
 
@@ -20,6 +23,11 @@ class TimeHandler(object):
 
     @classmethod
     def time_obj_from_str(cls, _time_repr):
+        """
+        Create time obejct from string
+        param _time_repr: string 'YYYY-MM-DD'
+        return: time object (TimeHandler.TimeExpansion)
+        """
         return cls.TimeExpansion(*map(int, _time_repr.split(':')))
 
     def is_time_format(self, p):

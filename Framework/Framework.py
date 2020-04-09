@@ -10,6 +10,13 @@ from Framework.TypesSupport.TypesSupport import TypesSupport
 
 
 class Framework(object):
+    """
+    Progressor Framework is a python extension for the benefit of progressor app. It is global, and it consists
+    of multiple tools that extend python functionality (E.g. data moderator extends storage IO, or date handler
+    that extends python's datetime.date numeric operations) and those tools cannot use onr another by design.
+    Each tool has a property of it's name - and any class in the app source code can use (unless it is another tool).
+    To get Framework tools a class should mention ExtendWithFramework as it's metaclass.
+    """
 
     def __init__(self):
         self._time_keeper_ops = []
@@ -38,6 +45,7 @@ class Framework(object):
         self._time_keeper_ops.append(func)
 
 
+# framework is static type
 framework = Framework()
 
 
