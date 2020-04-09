@@ -7,10 +7,11 @@ from Framework.Framework import get_framework
 
 class ProgressorDialog(QDialog):
 
-    def __init__(self, parent=None, label_width=150):
+    def __init__(self, parent=None, label_width=150, label_alone_width=300):
         super(ProgressorDialog, self).__init__(parent)
         self.fw = get_framework()
         self._label_width = label_width
+        self._label_alone_width = label_alone_width
         self.setWindowIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="progressor_main")))
 
     def _entry(self, label):
@@ -25,7 +26,7 @@ class ProgressorDialog(QDialog):
     def _label(self, label):
         layout = QHBoxLayout()
         label = QLabel(label)
-        label.setFixedWidth(self._label_width + 100)
+        label.setFixedWidth(self._label_alone_width)
         label.setAlignment(Qt.AlignLeft)
         layout.addWidget(label)
         return layout

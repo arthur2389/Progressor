@@ -83,7 +83,7 @@ class NewGoalInputPartII(ProgressorDialog):
 
         self._goal_raw_data = None
 
-        self._vs_entry = self._gv_entry = None
+        self._vs_entry = self._gv_entry = self._cv_entry = None
 
         self.setLayout(self._build_layout())
         self.setWindowTitle("Insert new goal - set your goal !")
@@ -104,8 +104,15 @@ class NewGoalInputPartII(ProgressorDialog):
         vlayout.addLayout(dt_start_layout)
         vlayout.addLayout(dt_end_layout)
         vlayout.addLayout(status_layout)
+        vlayout.addSpacing(25)
         vlayout.addLayout(vs_layout)
         vlayout.addLayout(gv_layout)
+
+        if self.status == EGoalStatus.IN_PROGRESS:
+            cv_layout, self._cv_entry = self._entry(label="The value today: ")
+            vlayout.addLayout(cv_layout)
+
+        vlayout.addSpacing(25)
 
         self._get_dialog_buttons(vlayout)
         return vlayout
@@ -125,7 +132,8 @@ class NewGoalInputPartII(ProgressorDialog):
                                            start_date=start_date,
                                            end_date=end_date,
                                            start_value=vs,
-                                           goal_value=gv)
+                                           goal_value=gv,
+                                           curr_value=self._cv_entry.text() if self._cv_entry else None)
         QDialog.accept(self)
 
 
