@@ -6,6 +6,7 @@
 from Core.Goal.GoalFactory import GoalFactory
 from Core.DataTransferTypes.CreationData import CreationData
 from Framework.ExpandWithFramework import ExpandWithFramework
+from EnumTypes import *
 
 
 class Progressor(metaclass=ExpandWithFramework):
@@ -53,6 +54,25 @@ class Progressor(metaclass=ExpandWithFramework):
             return self._goals[name]
         except KeyError:
             raise KeyError('goal with name {0} does not exists'.format(name))
+
+    def check_dates_define_status(self, date_st, date_end):
+        """
+        param date_st:
+        param date_end:
+        return:
+        """
+        today = self.fw.date_handler.today()
+        date_st = self.fw.date_handler.date_from_str(date_st)
+        date_end = self.fw.date_handler.date_from_str(date_end)
+
+        if date_st >= date_end:
+            raise NotImplemented('start date should be before the end date')
+
+        if today <= date_st:
+            return EGoalStatus.NOT_STARTED
+        elif today > date_end:
+            return EGoalStatus.FINISHED
+        return EGoalStatus.IN_PROGRESS
 
     def dump_to_database(self, goal):
         """

@@ -22,6 +22,14 @@ class ProgressorDialog(QDialog):
         layout.addWidget(entry)
         return layout, entry
 
+    def _label(self, label):
+        layout = QHBoxLayout()
+        label = QLabel(label)
+        label.setFixedWidth(self._label_width + 100)
+        label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(label)
+        return layout
+
     def _get_dialog_buttons(self, _layout):
         button_box = QDialogButtonBox(QDialogButtonBox.Ok|
                                       QDialogButtonBox.Cancel)

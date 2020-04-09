@@ -6,12 +6,13 @@ from Core.DataTransferTypes.CreationData import CreationData
 from EnumTypes import *
 
 
-class NewGoalInput(ProgressorDialog):
+class NewGoalInputPartI(ProgressorDialog):
 
-    def __init__(self):
-        super(NewGoalInput, self).__init__()
+    def __init__(self, progressor):
+        super(NewGoalInputPartI, self).__init__()
 
-        self._goal_raw_data = None
+        self._progressor = progressor
+        self._goal_init_data = {}
         self._name_entry = self._vs_entry = self._gv_entry = None
         self.dt_start_txt = self.dt_end_txt = None
 
@@ -20,8 +21,8 @@ class NewGoalInput(ProgressorDialog):
         self.setMinimumWidth(50)
 
     @property
-    def goal_raw_data(self):
-        return self._goal_raw_data
+    def goal_init_data(self):
+        return self._goal_init_data
 
     def _build_layout(self):
         vlayout = QVBoxLayout()
@@ -30,17 +31,13 @@ class NewGoalInput(ProgressorDialog):
 
         dt_start_layout, self.dt_start_txt = self._entry("Goal's start date: ")
         dt_start_layout.addWidget(self._open_calendar(EStage.START))
+
         dt_end_layout, self.dt_end_txt = self._entry("Goal's last date: ")
         dt_end_layout.addWidget(self._open_calendar(EStage.END))
-
-        vs_layout, self._vs_entry = self._entry(label="Value as the start: ")
-        gv_layout, self._gv_entry = self._entry(label="Goal value: ")
 
         vlayout.addLayout(name_layout)
         vlayout.addLayout(dt_start_layout)
         vlayout.addLayout(dt_end_layout)
-        vlayout.addLayout(vs_layout)
-        vlayout.addLayout(gv_layout)
 
         self._get_dialog_buttons(vlayout)
         return vlayout
@@ -63,10 +60,66 @@ class NewGoalInput(ProgressorDialog):
 
     def accept(self):
         name = self._name_entry.text()
-        vs = self._vs_entry.text()
-        gv = self._gv_entry.text()
         start_date = self.dt_start_txt.text()
         end_date = self.dt_end_txt.text()
+        goal_status = self._progressor.check_dates_define_status(date_st=start_date, date_end=end_date)
+
+        self._goal_init_data = {'name': name,
+                                'start_date': start_date,
+                                'end_date': end_date,
+                                'status': goal_status}
+        QDialog.accept(self)
+
+
+class NewGoalInputPartII(ProgressorDialog):
+
+    def __init__(self, goal_name, start_date, end_date, status):
+        super(NewGoalInputPartII, self).__init__()
+
+        self.goal_name = goal_name
+        self.dt_start = start_date
+        self.dt_end = end_date
+        self.status = status
+
+        self._goal_raw_data = None
+
+        self._vs_entry = self._gv_entry = None
+
+        self.setLayout(self._build_layout())
+        self.setWindowTitle("Insert new goal - set your goal !")
+        self.setMinimumWidth(50)
+
+    def _build_layout(self):
+        vlayout = QVBoxLayout()
+
+        name_layout = self._label("Goal name: {}".format(self.goal_name))
+        dt_start_layout = self._label("Goal's start date: {}".format(self.dt_start))
+        dt_end_layout = self._label("Goal's last date: {}".format(self.dt_end))
+        status_layout = self._label("Goal's status: {}".format(self.status.value))
+
+        vs_layout, self._vs_entry = self._entry(label="Value at the start: ")
+        gv_layout, self._gv_entry = self._entry(label="Goal value: ")
+
+        vlayout.addLayout(name_layout)
+        vlayout.addLayout(dt_start_layout)
+        vlayout.addLayout(dt_end_layout)
+        vlayout.addLayout(status_layout)
+        vlayout.addLayout(vs_layout)
+        vlayout.addLayout(gv_layout)
+
+        self._get_dialog_buttons(vlayout)
+        return vlayout
+
+    @property
+    def goal_raw_data(self):
+        return self._goal_raw_data
+
+    def accept(self):
+        name = self.goal_name
+        vs = self._vs_entry.text()
+        gv = self._gv_entry.text()
+        start_date = self.dt_start
+        end_date = self.dt_end
 
         self._goal_raw_data = CreationData(goal_name=name,
                                            start_date=start_date,
@@ -74,22 +127,6 @@ class NewGoalInput(ProgressorDialog):
                                            start_value=vs,
                                            goal_value=gv)
         QDialog.accept(self)
-
-    # def _importance_items(self):
-    #     importance_dict = self._data_moderator.get_data(group="event_properties",
-    #                                                     parameter="importance_metrics")
-    #     importance_names = list(importance_dict.keys())
-    #     importance_names.sort(key=lambda i: importance_dict[i])
-    #     return importance_names
-    #
-    # def _importance_entry(self):
-    #     priority_layout = QHBoxLayout()
-    #     names_label = QLabel("Event importance: ")
-    #     self._priorities = QComboBox()
-    #     self._priorities.addItems(self._importance_items())
-    #     priority_layout.addWidget(names_label)
-    #     priority_layout.addWidget(self._priorities)
-    #     return priority_layout
 
 
 class ProgressorCalendar(ProgressorDialog):
