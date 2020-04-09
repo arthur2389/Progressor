@@ -15,23 +15,12 @@ class TimeHandler(object):
         def __int__(self):
             return self.hour * self.HOUR_FACTOR + self.minute * self.MIN_FACTOR + self.second
 
-        def __float__(self):
-            return float(self.__int__())
+        def __sub__(self, other):
+            return int(self) - int(other)
 
     @classmethod
-    def time_obj(cls, hour, min, sec):
-        return cls.TimeExpansion(hour, min, sec)
-
-    def time_format_to_sec(self, _time):
-        """
-        param _str: time
-        return:
-        """
-        if isinstance(_time, self.TimeExpansion):
-            return int(_time)
-
-        time_obj = self.TimeExpansion(*map(int, _time.split(':')))
-        return int(time_obj)
+    def time_obj_from_str(cls, _time_repr):
+        return cls.TimeExpansion(*map(int, _time_repr.split(':')))
 
     def is_time_format(self, p):
         """

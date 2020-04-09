@@ -11,7 +11,7 @@
         "end_date": "2021-7-30",
         "start_value": 65,
         "goal_value": 110,
-        "curr_value": 83
+        "curr_value": 63
     },
     "month salary": {
         "start_date": "2020-8-30",
@@ -25,7 +25,7 @@
         "end_date": "2021-1-30",
         "start_value": "00:22:35",
         "goal_value": "00:18:35",
-        "curr_value": "00:21:58"
+        "curr_value": "00:22:38"
     },
     "learning spanish": {
         "start_date": "2018-5-5",
@@ -44,7 +44,7 @@
         "end_date": "2030-1-1",
         "start_value": "First lieutenant",
         "goal_value": "Major General",
-        "curr_value": "Major",
+        "curr_value": "Captain",
         "terms": {
             "Second lieutenant": 1,
             "First lieutenant": 2,

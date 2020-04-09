@@ -32,9 +32,9 @@ class Goal(metaclass=ExpandWithFramework):
         def as_dict(self):
             return self._stages
 
-        def completed_pct(self):
-            return (abs(self._stages[EStage.CURRENT] - self._stages[EStage.START])
-                    / abs(self._stages[EStage.END] - self._stages[EStage.START]))
+        def delta(self):
+            return (self._stages[EStage.CURRENT] - self._stages[EStage.START])\
+                   / (self._stages[EStage.END] - self._stages[EStage.START])
 
     def __init__(self, progressor, data):
         """
@@ -85,7 +85,7 @@ class Goal(metaclass=ExpandWithFramework):
         """
         return: goal completion rate right to this day
         """
-        return round(self._values.completed_pct() * 100, 2)
+        return round(self._values.delta() * 100, 2)
 
     def completion_projection_at_end(self):
         """
@@ -95,7 +95,7 @@ class Goal(metaclass=ExpandWithFramework):
             return 0
         elif self._status == EGoalStatus.FINISHED:
             return self.completion_rate()
-        return round(self.completion_rate() / self._dates.completed_pct(), 2)
+        return round(self.completion_rate() / self._dates.delta(), 2)
 
     @abc.abstractmethod
     def _data_process(self, v):
@@ -124,7 +124,7 @@ class QuantifiedGoal(Goal):
 class TimeBasedGoal(Goal):
 
     def _data_process(self, v):
-        return float(self.fw.time_handler.time_format_to_sec(v))
+        return self.fw.time_handler.time_obj_from_str(v)
 
 
 class TermBasedGoal(Goal):
