@@ -62,3 +62,12 @@ class DataModerator(object):
         """
         full_path = path.join(self._path_database, group)
         JsonIO.delete(file_path=full_path, field=parameter)
+
+    def get_icon_path(self, group, name):
+        """
+        Get path to an icon
+        param group: icons group
+        param name: icon name
+        return: full path to icon
+        """
+        return path.join(self._path_metadata, 'Icons', group, name)

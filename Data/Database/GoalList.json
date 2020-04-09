@@ -55,5 +55,12 @@
             "Brigadier General": 9,
             "Major General": 14
         }
+    },
+    "cruches": {
+        "start_date": "2020-04-10",
+        "end_date": "2020-04-30",
+        "start_value": 25,
+        "goal_value": 55,
+        "curr_value": 25
     }
 }

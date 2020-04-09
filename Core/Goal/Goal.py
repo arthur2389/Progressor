@@ -150,7 +150,7 @@ class Goal(metaclass=ExpandWithFramework):
         """
         return: goal current status right to this day (EGoalStatus)
         """
-        if self._dates[EStage.CURRENT] < self._dates[EStage.START]:
+        if self._dates[EStage.CURRENT] <= self._dates[EStage.START]:
             return EGoalStatus.NOT_STARTED
         elif self._dates[EStage.CURRENT] > self._dates[EStage.END]:
             return EGoalStatus.FINISHED
