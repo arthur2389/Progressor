@@ -44,7 +44,7 @@
         "end_date": "2030-1-1",
         "start_value": "First lieutenant",
         "goal_value": "Major General",
-        "curr_value": "Captain",
+        "curr_value": "Major",
         "terms": {
             "Second lieutenant": 1,
             "First lieutenant": 2,

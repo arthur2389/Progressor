@@ -4,8 +4,8 @@
 # Date: April 2020
 
 from Framework.DataModerator.DataModerator import DataModerator
-from Framework.DateTimeHandler.DateHandler import DateHandler
-from Framework.DateTimeHandler.TimeHandler import TimeHandler
+from Framework.DateHandler.DateHandler import DateHandler
+from Framework.TimeHandler.TimeHandler import TimeHandler
 from Framework.TypesSupport.TypesSupport import TypesSupport
 
 
