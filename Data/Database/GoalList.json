@@ -57,10 +57,10 @@
         }
     },
     "Crunches": {
-        "start_date": "2020-04-08",
-        "end_date": "2020-04-30",
+        "start_date": "2020-04-09",
+        "end_date": "2020-04-24",
         "start_value": 15,
-        "goal_value": 45,
-        "curr_value": 18
+        "goal_value": 25,
+        "curr_value": 17
     }
 }

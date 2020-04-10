@@ -53,14 +53,23 @@ class NewGoalInputPartI(ProgressorDialog):
             layout = self.layout()
             layout.removeWidget(self._buttons)
 
-            self._sub_terms_layout = QVBoxLayout()
-            self._sub_terms_layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
-                                             self._if_user_enumerates_terms))
+            self._sub_terms_layout = self._terms_layout()
             layout.addLayout(self._sub_terms_layout)
             layout.addWidget(self._buttons, alignment=Qt.AlignCenter)
         else:
-            self._remove_widgets(layout=self.layout(),
-                                 layout_to_remove=self._sub_terms_layout)
+            self._remove_layout(layout=self.layout(),
+                                layout_to_remove=self._sub_terms_layout)
+
+    def _terms_layout(self):
+        layout = QVBoxLayout()
+
+        listw = QListWidget()
+        button = QPushButton()
+        layout.addWidget(listw)
+        layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
+                         self._if_user_enumerates_terms))
+        layout.addWidget(button)
+        return layout
 
     def _if_user_enumerates_terms(self, state):
         print('user enumerates')

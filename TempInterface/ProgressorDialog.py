@@ -36,13 +36,26 @@ class ProgressorDialog(QDialog):
         check_box.stateChanged.connect(action)
         return check_box
 
-    def _remove_widgets(self, layout, layout_to_remove):
+    def _list(self):
+        pass
+
+    def _remove_layout(self, layout, layout_to_remove):
         import sip
 
-        for i in range(layout_to_remove.count()):
-            w = layout_to_remove.itemAt(i).widget()
+        items = [layout_to_remove.itemAt(i) for i in range(layout_to_remove.count())]
+
+        for item in items:
+            w = item.widget()
             layout.removeWidget(w)
             sip.delete(w)
+
+        for i in range(layout.count()):
+            layout_item = layout.itemAt(i)
+            if layout_item.layout() == layout_to_remove:
+                layout.removeItem(layout_item)
+                break
+
+        self.adjustSize()
 
     def _get_dialog_buttons(self, _layout):
         button_box = QDialogButtonBox(QDialogButtonBox.Ok|
