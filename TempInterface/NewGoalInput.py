@@ -9,6 +9,80 @@ from EnumTypes import *
 
 class NewGoalInputPartI(ProgressorDialog):
 
+    class ProgressorCalendar(ProgressorDialog):
+
+        def __init__(self, parent):
+            super(NewGoalInputPartI.ProgressorCalendar, self).__init__(parent=parent)
+            self.calendar = None
+            self._date = ''
+            self.setLayout(self._build_layout())
+
+        @property
+        def selected_date(self):
+            return self._date
+
+        def _build_layout(self):
+            vlayout = QVBoxLayout()
+            self.calendar = QCalendarWidget()
+
+            vlayout.addWidget(self.calendar)
+            self._get_dialog_buttons(vlayout)
+
+            return vlayout
+
+        def accept(self):
+            self._date = str(self.calendar.selectedDate().toPyDate())
+            QDialog.accept(self)
+
+    class AddTerm(ProgressorDialog):
+
+        def __init__(self, parent):
+            super(NewGoalInputPartI.AddTerm, self).__init__(parent=parent)
+            self._term_entry = None
+            self._new_term = None
+            self.setLayout(self._build_layout())
+
+        @property
+        def new_term(self):
+            return self._new_term
+
+        def _build_layout(self):
+            vlayout = QVBoxLayout()
+            term_layout, self._term_entry = self._entry(label="New term: ")
+            vlayout.addLayout(term_layout)
+            self._get_dialog_buttons(vlayout)
+            return vlayout
+
+        def accept(self):
+            self._new_term = self._term_entry.text()
+            QDialog.accept(self)
+
+    class AddEnumeratedTerm(ProgressorDialog):
+
+        def __init__(self, parent):
+            super(NewGoalInputPartI.AddEnumeratedTerm, self).__init__(parent=parent)
+            self._term_entry = None
+            self._value_entry = None
+            self._new_term = None
+            self.setLayout(self._build_layout())
+
+        @property
+        def new_term(self):
+            return self._new_term
+
+        def _build_layout(self):
+            vlayout = QVBoxLayout()
+            term_layout, self._term_entry = self._entry(label="New term: ")
+            value_layout, self._value_entry = self._entry(label="Value for the term: ")
+            vlayout.addLayout(term_layout)
+            vlayout.addLayout(value_layout)
+            self._get_dialog_buttons(vlayout)
+            return vlayout
+
+        def accept(self):
+            self._new_term = '{0}: {1}'.format(self._term_entry.text(), self._value_entry.text())
+            QDialog.accept(self)
+
     def __init__(self, progressor):
         super(NewGoalInputPartI, self).__init__()
 
@@ -63,16 +137,50 @@ class NewGoalInputPartI(ProgressorDialog):
     def _terms_layout(self):
         layout = QVBoxLayout()
 
-        listw = QListWidget()
-        button = QPushButton()
-        layout.addWidget(listw)
+        self.listw = QListWidget()
         layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
                          self._if_user_enumerates_terms))
-        layout.addWidget(button)
+        layout.addWidget(self.listw)
+        self._new_term = self._button()
+        layout.addWidget(self._new_term)
+
         return layout
 
+    def _button(self):
+        button = QPushButton()
+        button.setIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="add_line")))
+        button.setFixedWidth(70)
+        button.setFixedHeight(40)
+        button.setIconSize(QSize(35, 35))
+        button.clicked.connect(self._add_term)
+        return button
+
+    def _add_term(self):
+        add_term_window = self.AddTerm(self)
+        if add_term_window.exec_():
+            self.listw.addItem(self._term_item(is_enum=False, text=add_term_window.new_term))
+
+    def _add_enum_term(self):
+        add_term_window = self.AddEnumeratedTerm(self)
+        if add_term_window.exec_():
+            self.listw.addItem(self._term_item(is_enum=True, text=add_term_window.new_term))
+
+    def _term_item(self, is_enum, text):
+        item = QListWidgetItem(text)
+        if is_enum:
+            icon_name = 'blue_arrow'
+        else:
+            icon_name = 'blank_arrow'
+        item.setIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name=icon_name)))
+        return item
+
     def _if_user_enumerates_terms(self, state):
-        print('user enumerates')
+        if state == 2:
+            self._new_term.clicked.disconnect(self._add_term)
+            self._new_term.clicked.connect(self._add_enum_term)
+        else:
+            self._new_term.clicked.disconnect(self._add_enum_term)
+            self._new_term.clicked.connect(self._add_term)
 
     def _build_layout_for_terms(self):
         pass
@@ -85,7 +193,7 @@ class NewGoalInputPartI(ProgressorDialog):
         return open_calendar
 
     def _calendar(self, stage):
-        self.cal = ProgressorCalendar(self)
+        self.cal = self.ProgressorCalendar(self)
         if self.cal.exec_():
             if stage == EStage.START:
                 ent = self.dt_start_txt
@@ -169,31 +277,4 @@ class NewGoalInputPartII(ProgressorDialog):
                                            start_value=vs,
                                            goal_value=gv,
                                            curr_value=self._cv_entry.text() if self._cv_entry else None)
-        QDialog.accept(self)
-
-
-class ProgressorCalendar(ProgressorDialog):
-
-    def __init__(self, parent):
-        super(ProgressorCalendar, self).__init__(parent=parent)
-        self.calendar = None
-        self._date = ''
-        self.setLayout(self._build_layout())
-
-    @property
-    def selected_date(self):
-        return self._date
-
-    def _build_layout(self):
-
-        vlayout = QVBoxLayout()
-        self.calendar = QCalendarWidget()
-
-        vlayout.addWidget(self.calendar)
-        self._get_dialog_buttons(vlayout)
-
-        return vlayout
-
-    def accept(self):
-        self._date = str(self.calendar.selectedDate().toPyDate())
         QDialog.accept(self)
