@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 from TempInterface.ProgressorDialog import ProgressorDialog
 from Core.DataTransferTypes.CreationData import CreationData
@@ -35,11 +36,30 @@ class NewGoalInputPartI(ProgressorDialog):
         dt_end_layout, self.dt_end_txt = self._entry("Goal's last date: ")
         dt_end_layout.addWidget(self._open_calendar(EStage.END))
 
+        add_terms, cb = self._checkbox("Define terms for the goal (optional)", action=self._if_user_defines_terms)
+
         vlayout.addLayout(name_layout)
         vlayout.addLayout(dt_start_layout)
         vlayout.addLayout(dt_end_layout)
+        vlayout.addSpacing(25)
+        vlayout.addLayout(add_terms)
+        vlayout.addSpacing(15)
+        self._buttons = self._get_dialog_buttons(vlayout)
+        return vlayout
 
-        self._get_dialog_buttons(vlayout)
+    def _if_user_defines_terms(self, state):
+        layout = self.layout()
+        layout.removeWidget(self._buttons)
+        layout.addLayout(self._build_layout_for_terms())
+        layout.addWidget(self._buttons, alignment=Qt.AlignCenter)
+
+    def _if_user_enumerates_terms(self, state):
+        print('user enumerates')
+
+    def _build_layout_for_terms(self):
+        vlayout = QVBoxLayout()
+        is_enum, cb = self._checkbox("Enumerate the goal terms (optional)", action=self._if_user_enumerates_terms)
+        vlayout.addLayout(is_enum)
         return vlayout
 
     def _open_calendar(self, stage):
@@ -95,7 +115,7 @@ class NewGoalInputPartII(ProgressorDialog):
         name_layout = self._label("Goal name: {}".format(self.goal_name))
         dt_start_layout = self._label("Goal's start date: {}".format(self.dt_start))
         dt_end_layout = self._label("Goal's last date: {}".format(self.dt_end))
-        status_layout = self._label("Goal's status: {}".format(self.status.value))
+        status_layout = self._label("Goal status: {}".format(self.status.value))
 
         vs_layout, self._vs_entry = self._entry(label="Value at the start: ")
         gv_layout, self._gv_entry = self._entry(label="Goal value: ")

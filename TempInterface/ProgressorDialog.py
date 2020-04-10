@@ -31,12 +31,20 @@ class ProgressorDialog(QDialog):
         layout.addWidget(label)
         return layout
 
+    def _checkbox(self, text, action):
+        layout = QHBoxLayout()
+        check_box = QCheckBox(text)
+        check_box.stateChanged.connect(action)
+        layout.addWidget(check_box)
+        return layout, check_box
+
     def _get_dialog_buttons(self, _layout):
         button_box = QDialogButtonBox(QDialogButtonBox.Ok|
                                       QDialogButtonBox.Cancel)
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         _layout.addWidget(button_box, alignment=Qt.AlignCenter)
+        return button_box
 
     def accept(self):
         pass
