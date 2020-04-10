@@ -36,31 +36,37 @@ class NewGoalInputPartI(ProgressorDialog):
         dt_end_layout, self.dt_end_txt = self._entry("Goal's last date: ")
         dt_end_layout.addWidget(self._open_calendar(EStage.END))
 
-        add_terms, cb = self._checkbox("Define terms for the goal (optional)", action=self._if_user_defines_terms)
+        add_terms = self._checkbox("Define terms for the goal (optional)", self._if_user_defines_terms)
 
         vlayout.addLayout(name_layout)
         vlayout.addLayout(dt_start_layout)
         vlayout.addLayout(dt_end_layout)
         vlayout.addSpacing(25)
-        vlayout.addLayout(add_terms)
+
+        vlayout.addWidget(add_terms)
         vlayout.addSpacing(15)
         self._buttons = self._get_dialog_buttons(vlayout)
         return vlayout
 
     def _if_user_defines_terms(self, state):
-        layout = self.layout()
-        layout.removeWidget(self._buttons)
-        layout.addLayout(self._build_layout_for_terms())
-        layout.addWidget(self._buttons, alignment=Qt.AlignCenter)
+        if state == 2:
+            layout = self.layout()
+            layout.removeWidget(self._buttons)
+
+            self._sub_terms_layout = QVBoxLayout()
+            self._sub_terms_layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
+                                             self._if_user_enumerates_terms))
+            layout.addLayout(self._sub_terms_layout)
+            layout.addWidget(self._buttons, alignment=Qt.AlignCenter)
+        else:
+            self._remove_widgets(layout=self.layout(),
+                                 layout_to_remove=self._sub_terms_layout)
 
     def _if_user_enumerates_terms(self, state):
         print('user enumerates')
 
     def _build_layout_for_terms(self):
-        vlayout = QVBoxLayout()
-        is_enum, cb = self._checkbox("Enumerate the goal terms (optional)", action=self._if_user_enumerates_terms)
-        vlayout.addLayout(is_enum)
-        return vlayout
+        pass
 
     def _open_calendar(self, stage):
         open_calendar = QPushButton()
