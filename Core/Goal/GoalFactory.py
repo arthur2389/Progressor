@@ -23,10 +23,10 @@ class GoalFactory(metaclass=ExpandWithFramework):
             return TimeBasedGoal(progressor, data)
         # now the input has to be string otherwise it is a bug - the string can be enumerated or not
         elif data.type is str:
-            # in the input - a dictionary means that the terms are enumerated, a list is just list of terms
-            if type(data.terms) is dict:
-                return EnumeratedTermsGoal(progressor, data)
-            return TermBasedGoal(progressor, data)
+            # in the input - a dictionary means that the terms are enumerated, unless the values are all zeros
+            if data.terms and all(val == 0 for val in data.terms.values()):
+                return TermBasedGoal(progressor, data)
+            return EnumeratedTermsGoal(progressor, data)
         # invalid state will lead to creation of Null goal. it was made to prevent immediate failure
         return NullGoal(progressor, data)
 

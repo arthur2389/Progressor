@@ -7,9 +7,9 @@ class EDateFormat(Enum):
 
 
 class EGoalStatus(Enum):
-    NOT_STARTED = 1
-    IN_PROGRESS = 2
-    FINISHED = 3
+    NOT_STARTED = 'Not started'
+    IN_PROGRESS = 'In progress'
+    FINISHED = 'Finished '
 
 
 class EStage(Enum):

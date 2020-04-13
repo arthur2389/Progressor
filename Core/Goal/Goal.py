@@ -112,7 +112,7 @@ class Goal(metaclass=ExpandWithFramework):
         if self._status != EGoalStatus.IN_PROGRESS:
             raise NotImplementedError('Cannot set value to finished or not started goal')
         # try cast to int - mainly for QuantifiedGoal representation
-        val = self.fw.types.try_int_cast(val)
+        val = self.fw.types.try_float_cast(val)
         # update both in the stages object and in raw data
         self._values[EStage.CURRENT] = self._data_process(val)
         self._data.curr_value = val

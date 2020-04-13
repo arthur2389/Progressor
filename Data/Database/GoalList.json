@@ -1,66 +1,41 @@
 {
-    "maximum push ups": {
-        "start_date": "2020-01-04",
-        "end_date": "2020-06-20",
-        "start_value": 25,
-        "goal_value": 50,
-        "curr_value": 28
+    "Push ups": {
+        "start_date": "2020-04-14",
+        "end_date": "2020-07-14",
+        "start_value": 26.0,
+        "goal_value": 70.0,
+        "curr_value": 26.0,
+        "terms": {}
     },
-    "chest bench press kg": {
-        "start_date": "2018-1-30",
-        "end_date": "2021-7-30",
-        "start_value": 65,
-        "goal_value": 110,
-        "curr_value": 63
+    "Crunches": {
+        "start_date": "2020-04-14",
+        "end_date": "2020-07-14",
+        "start_value": 28.0,
+        "goal_value": 55.0,
+        "curr_value": 28.0,
+        "terms": {}
     },
-    "month salary": {
-        "start_date": "2020-8-30",
-        "end_date": "2022-8-30",
-        "start_value": 14000,
-        "goal_value": 23000,
-        "curr_value": 14000
-    },
-    "swimming 1km": {
-        "start_date": "2020-1-30",
-        "end_date": "2021-1-30",
-        "start_value": "00:22:35",
-        "goal_value": "00:18:35",
-        "curr_value": "00:22:38"
-    },
-    "learning spanish": {
-        "start_date": "2018-5-5",
-        "end_date": "2019-5-5",
-        "start_value": "Beginner",
-        "goal_value": "Expert",
-        "curr_value": "Expert",
-        "terms": [
-            "Beginner",
-            "Advanced",
-            "Expert"
-        ]
-    },
-    "army service process": {
-        "start_date": "2016-1-1",
-        "end_date": "2030-1-1",
-        "start_value": "First lieutenant",
-        "goal_value": "Major General",
-        "curr_value": "Major",
+    "Engineering rank": {
+        "start_date": "2018-04-08",
+        "end_date": "2023-01-01",
+        "start_value": "Junior",
+        "goal_value": "Principal",
+        "curr_value": "Senior",
         "terms": {
-            "Second lieutenant": 1,
-            "First lieutenant": 2,
-            "Captain": 3,
-            "Major": 4,
-            "Lieutenant Colonel": 5,
-            "Colonel": 7,
-            "Brigadier General": 9,
-            "Major General": 14
+            "Junior": 1.0,
+            "Senior": 2.0,
+            "Staff": 3.5,
+            "Principal": 5.5,
+            "Technologist": 8.0,
+            "Senior technologist": 12.0
         }
     },
-    "cruches": {
-        "start_date": "2020-04-10",
-        "end_date": "2020-04-30",
-        "start_value": 25,
-        "goal_value": 55,
-        "curr_value": 25
+    "Monthly income brute": {
+        "start_date": "2018-04-08",
+        "end_date": "2025-04-08",
+        "start_value": 10000.0,
+        "goal_value": 65000.0,
+        "curr_value": 23000.0,
+        "terms": {}
     }
 }
