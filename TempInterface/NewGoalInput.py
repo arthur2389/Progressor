@@ -90,7 +90,7 @@ class NewGoalInputPartI(ProgressorDialog):
         self._goal_init_data = {}
         self._name_entry = self._vs_entry = self._gv_entry = None
         self.dt_start_txt = self.dt_end_txt = None
-        self._term_list = ProgressorList()
+        self._term_list = self.fw.widgets.PrListWidget()
 
         self.setLayout(self._build_layout())
         self.setWindowTitle("Insert new goal")
@@ -227,11 +227,7 @@ class NewGoalInputPartI(ProgressorDialog):
         QDialog.accept(self)
 
 
-class ProgressorList(QListWidget):
 
-    def __iter__(self):
-        for i in range(self.count()):
-            yield self.item(i)
 
 
 class NewGoalInputPartII(ProgressorDialog):

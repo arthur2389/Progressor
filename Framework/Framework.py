@@ -2,6 +2,7 @@
 # All rights reserved
 # Author: Arthur Farber
 # Date: April 2020
+import importlib
 
 from Framework.DataModerator.DataModerator import DataModerator
 from Framework.DateHandler.DateHandler import DateHandler
@@ -24,6 +25,7 @@ class Framework(object):
         self._date_handler = DateHandler()
         self._time_handler = TimeHandler()
         self._types = TypesSupport()
+        self._widgets = importlib.import_module(name='Framework.Widgets.Widgets')
 
     @property
     def time_handler(self):
@@ -40,6 +42,10 @@ class Framework(object):
     @property
     def types(self):
         return self._types
+
+    @property
+    def widgets(self):
+        return self._widgets
 
     def register_for_time_keeper(self, func):
         self._time_keeper_ops.append(func)
