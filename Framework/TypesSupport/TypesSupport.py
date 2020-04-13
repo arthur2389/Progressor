@@ -7,8 +7,8 @@
 class TypesSupport(object):
 
     @staticmethod
-    def try_int_cast(v):
+    def try_float_cast(v):
         try:
-            return int(v)
+            return float(v)
         except ValueError:
             return v

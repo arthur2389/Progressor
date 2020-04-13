@@ -4,28 +4,32 @@
         "end_date": "2020-06-20",
         "start_value": 25,
         "goal_value": 50,
-        "curr_value": 28
+        "curr_value": 28,
+        "terms": {}
     },
     "chest bench press kg": {
         "start_date": "2018-1-30",
         "end_date": "2021-7-30",
         "start_value": 65,
         "goal_value": 110,
-        "curr_value": 63
+        "curr_value": 63,
+        "terms": {}
     },
     "month salary": {
         "start_date": "2020-8-30",
         "end_date": "2022-8-30",
         "start_value": 14000,
         "goal_value": 23000,
-        "curr_value": 14000
+        "curr_value": 14000,
+        "terms": {}
     },
     "swimming 1km": {
         "start_date": "2020-1-30",
         "end_date": "2021-1-30",
         "start_value": "00:22:35",
         "goal_value": "00:18:35",
-        "curr_value": "00:22:38"
+        "curr_value": "00:22:38",
+        "terms": {}
     },
     "learning spanish": {
         "start_date": "2018-5-5",
@@ -33,11 +37,11 @@
         "start_value": "Beginner",
         "goal_value": "Expert",
         "curr_value": "Expert",
-        "terms": [
-            "Beginner",
-            "Advanced",
-            "Expert"
-        ]
+        "terms": {
+            "Beginner": 0,
+            "Advanced": 0,
+            "Expert": 0
+        }
     },
     "army service process": {
         "start_date": "2016-1-1",
@@ -57,10 +61,24 @@
         }
     },
     "Crunches": {
+        "start_date": "2020-04-08",
+        "end_date": "2020-04-30",
+        "start_value": 25.0,
+        "goal_value": 50.0,
+        "curr_value": 28.0,
+        "terms": {}
+    },
+    "Army": {
         "start_date": "2020-04-07",
-        "end_date": "2020-05-05",
-        "start_value": 25,
-        "goal_value": 55,
-        "curr_value": 28
+        "end_date": "2020-04-30",
+        "start_value": "Private",
+        "goal_value": "Colonel",
+        "curr_value": "Major",
+        "terms": {
+            "Private": 1,
+            "Serjant": 2,
+            "Major": 5,
+            "Colonel": 8
+        }
     }
 }

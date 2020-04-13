@@ -33,10 +33,10 @@ class CreationData(metaclass=ExpandWithFramework):
         self.goal_name = goal_name
         self.start_date = start_date
         self.end_date = end_date
-        self.start_value = self.fw.types.try_int_cast(start_value)
-        self.goal_value = self.fw.types.try_int_cast(goal_value)
-        self.curr_value = self.start_value if curr_value is None else self.fw.types.try_int_cast(curr_value)
-        self.terms = terms
+        self.start_value = self.fw.types.try_float_cast(start_value)
+        self.goal_value = self.fw.types.try_float_cast(goal_value)
+        self.curr_value = self.start_value if curr_value is None else self.fw.types.try_float_cast(curr_value)
+        self.terms = {k: float(v) for k, v in terms.items()}
         self.type = type(self.start_value)
 
         # When all input is defined - check validity

@@ -14,7 +14,7 @@ class ProgressorDialog(QDialog):
         self._label_alone_width = label_alone_width
         self.setWindowIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="progressor_main")))
 
-    def _entry(self, label):
+    def _entry(self, label, *args, **kwargs):
         layout = QHBoxLayout()
         label = QLabel(label)
         label.setFixedWidth(self._label_width)
@@ -22,6 +22,15 @@ class ProgressorDialog(QDialog):
         layout.addWidget(label)
         layout.addWidget(entry)
         return layout, entry
+
+    def _entry_with_options(self, label, options):
+        priority_layout = QHBoxLayout()
+        names_label = QLabel(label)
+        entry = QComboBox()
+        entry.addItems(options)
+        priority_layout.addWidget(names_label)
+        priority_layout.addWidget(entry)
+        return priority_layout, entry
 
     def _label(self, label):
         layout = QHBoxLayout()

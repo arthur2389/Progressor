@@ -90,6 +90,7 @@ class NewGoalInputPartI(ProgressorDialog):
         self._goal_init_data = {}
         self._name_entry = self._vs_entry = self._gv_entry = None
         self.dt_start_txt = self.dt_end_txt = None
+        self._term_list = ProgressorList()
 
         self.setLayout(self._build_layout())
         self.setWindowTitle("Insert new goal")
@@ -137,10 +138,9 @@ class NewGoalInputPartI(ProgressorDialog):
     def _terms_layout(self):
         layout = QVBoxLayout()
 
-        self.listw = QListWidget()
         layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
                          self._if_user_enumerates_terms))
-        layout.addWidget(self.listw)
+        layout.addWidget(self._term_list)
         self._new_term = self._button()
         layout.addWidget(self._new_term)
 
@@ -158,12 +158,12 @@ class NewGoalInputPartI(ProgressorDialog):
     def _add_term(self):
         add_term_window = self.AddTerm(self)
         if add_term_window.exec_():
-            self.listw.addItem(self._term_item(is_enum=False, text=add_term_window.new_term))
+            self._term_list.addItem(self._term_item(is_enum=False, text=add_term_window.new_term))
 
     def _add_enum_term(self):
         add_term_window = self.AddEnumeratedTerm(self)
         if add_term_window.exec_():
-            self.listw.addItem(self._term_item(is_enum=True, text=add_term_window.new_term))
+            self._term_list.addItem(self._term_item(is_enum=True, text=add_term_window.new_term))
 
     def _term_item(self, is_enum, text):
         item = QListWidgetItem(text)
@@ -211,18 +211,44 @@ class NewGoalInputPartI(ProgressorDialog):
                                 'start_date': start_date,
                                 'end_date': end_date,
                                 'status': goal_status}
+        terms = {}
+        for item in self._term_list:
+            txt = item.text()
+            if ':' in txt:
+                vals = txt.split(':')
+                terms.update({vals[0]: vals[1].strip()})
+            else:
+                terms.update({txt: 0})
+        self._goal_init_data = {'name': name,
+                                'start_date': start_date,
+                                'end_date': end_date,
+                                'status': goal_status,
+                                'terms': terms}
         QDialog.accept(self)
+
+
+class ProgressorList(QListWidget):
+
+    def __iter__(self):
+        for i in range(self.count()):
+            yield self.item(i)
 
 
 class NewGoalInputPartII(ProgressorDialog):
 
-    def __init__(self, goal_name, start_date, end_date, status):
+    def __init__(self, goal_name, start_date, end_date, status, terms):
         super(NewGoalInputPartII, self).__init__()
 
         self.goal_name = goal_name
         self.dt_start = start_date
         self.dt_end = end_date
         self.status = status
+        self.terms = terms
+
+        if terms:
+            self.create_value_entries = self._entry_with_options
+        else:
+            self.create_value_entries = self._entry
 
         self._goal_raw_data = None
 
@@ -240,8 +266,10 @@ class NewGoalInputPartII(ProgressorDialog):
         dt_end_layout = self._label("Goal's last date: {}".format(self.dt_end))
         status_layout = self._label("Goal status: {}".format(self.status.value))
 
-        vs_layout, self._vs_entry = self._entry(label="Value at the start: ")
-        gv_layout, self._gv_entry = self._entry(label="Goal value: ")
+        vs_layout, self._vs_entry = self.create_value_entries(label="Value at the start: ",
+                                                              options=self._keys_for_entry())
+        gv_layout, self._gv_entry = self.create_value_entries(label="Goal value: ",
+                                                              options=self._keys_for_entry())
 
         vlayout.addLayout(name_layout)
         vlayout.addLayout(dt_start_layout)
@@ -252,7 +280,8 @@ class NewGoalInputPartII(ProgressorDialog):
         vlayout.addLayout(gv_layout)
 
         if self.status == EGoalStatus.IN_PROGRESS:
-            cv_layout, self._cv_entry = self._entry(label="The value today: ")
+            cv_layout, self._cv_entry = self.create_value_entries(label="The value today: ",
+                                                                  options=self._keys_for_entry())
             vlayout.addLayout(cv_layout)
 
         vlayout.addSpacing(25)
@@ -266,8 +295,8 @@ class NewGoalInputPartII(ProgressorDialog):
 
     def accept(self):
         name = self.goal_name
-        vs = self._vs_entry.text()
-        gv = self._gv_entry.text()
+        vs = self._extract_value(self._vs_entry)
+        gv = self._extract_value(self._gv_entry)
         start_date = self.dt_start
         end_date = self.dt_end
 
@@ -276,5 +305,15 @@ class NewGoalInputPartII(ProgressorDialog):
                                            end_date=end_date,
                                            start_value=vs,
                                            goal_value=gv,
-                                           curr_value=self._cv_entry.text() if self._cv_entry else None)
+                                           curr_value=self._extract_value(self._cv_entry) if self._cv_entry else None,
+                                           terms=self.terms)
         QDialog.accept(self)
+
+    def _extract_value(self, entry):
+        try:
+            return entry.text()
+        except AttributeError:
+            return entry.currentText()
+
+    def _keys_for_entry(self):
+        return [''] + list(self.terms.keys())
