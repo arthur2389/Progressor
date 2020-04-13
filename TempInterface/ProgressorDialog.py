@@ -12,7 +12,7 @@ class ProgressorDialog(QDialog):
         self.fw = get_framework()
         self._label_width = label_width
         self._label_alone_width = label_alone_width
-        self.setWindowIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="progressor_main")))
+        self.setWindowIcon(QIcon(self.fw.data_moderator.get_icon_path(name="progressor_main")))
 
     def _entry(self, label, *args, **kwargs):
         layout = QHBoxLayout()
@@ -39,11 +39,6 @@ class ProgressorDialog(QDialog):
         label.setAlignment(Qt.AlignLeft)
         layout.addWidget(label)
         return layout
-
-    def _checkbox(self, text, action):
-        check_box = QCheckBox(text)
-        check_box.stateChanged.connect(action)
-        return check_box
 
     def _list(self):
         pass

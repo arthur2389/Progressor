@@ -111,7 +111,8 @@ class NewGoalInputPartI(ProgressorDialog):
         dt_end_layout, self.dt_end_txt = self._entry("Goal's last date: ")
         dt_end_layout.addWidget(self._open_calendar(EStage.END))
 
-        add_terms = self._checkbox("Define terms for the goal (optional)", self._if_user_defines_terms)
+        add_terms = self.fw.widgets.PrCheckBox("Define terms for the goal (optional)",
+                                               self._if_user_defines_terms)
 
         vlayout.addLayout(name_layout)
         vlayout.addLayout(dt_start_layout)
@@ -138,8 +139,9 @@ class NewGoalInputPartI(ProgressorDialog):
     def _terms_layout(self):
         layout = QVBoxLayout()
 
-        layout.addWidget(self._checkbox("Enumerate the goal terms (optional)",
-                         self._if_user_enumerates_terms))
+        layout.addWidget(self.fw.widgets.PrCheckBox("Enumerate the goal terms (optional)",
+                                                    self._if_user_enumerates_terms))
+        self._term_list = self.fw.widgets.PrListWidget()
         layout.addWidget(self._term_list)
         self._new_term = self._button()
         layout.addWidget(self._new_term)
@@ -148,7 +150,7 @@ class NewGoalInputPartI(ProgressorDialog):
 
     def _button(self):
         button = QPushButton()
-        button.setIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="add_line")))
+        button.setIcon(QIcon(self.fw.data_moderator.get_icon_path(name="add_line")))
         button.setFixedWidth(70)
         button.setFixedHeight(40)
         button.setIconSize(QSize(35, 35))
@@ -171,7 +173,7 @@ class NewGoalInputPartI(ProgressorDialog):
             icon_name = 'blue_arrow'
         else:
             icon_name = 'blank_arrow'
-        item.setIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name=icon_name)))
+        item.setIcon(QIcon(self.fw.data_moderator.get_icon_path(name=icon_name)))
         return item
 
     def _if_user_enumerates_terms(self, state):
@@ -187,7 +189,7 @@ class NewGoalInputPartI(ProgressorDialog):
 
     def _open_calendar(self, stage):
         open_calendar = QPushButton()
-        open_calendar.setIcon(QIcon(self.fw.data_moderator.get_icon_path(group="main", name="calendar")))
+        open_calendar.setIcon(QIcon(self.fw.data_moderator.get_icon_path(name="calendar")))
         open_calendar.clicked.connect(lambda: self._calendar(stage))
 
         return open_calendar
@@ -225,9 +227,6 @@ class NewGoalInputPartI(ProgressorDialog):
                                 'status': goal_status,
                                 'terms': terms}
         QDialog.accept(self)
-
-
-
 
 
 class NewGoalInputPartII(ProgressorDialog):
