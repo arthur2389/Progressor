@@ -5,6 +5,21 @@ from PyQt5.QtCore import *
 
 class PrListWidget(QListWidget):
 
+    def __init__(self, action_double_click=None, action_right_click=None):
+        super(PrListWidget, self).__init__()
+        if action_double_click:
+            self.itemDoubleClicked.connect(action_double_click)
+        self.action_right_click = action_right_click
+
+    def mousePressEvent(self, QMouseEvent):
+        if QMouseEvent.button() == Qt.RightButton and self.action_right_click:
+            try:
+                self.action_right_click(self.itemAt(QMouseEvent.pos().y(), QMouseEvent.pos().y()))
+            # Catch exception in case user right clicked the tree in place with no item
+            except Exception as e:
+                print(e)
+        super(PrListWidget, self).mousePressEvent(QMouseEvent)
+
     def __iter__(self):
         for i in range(self.count()):
             yield self.item(i)

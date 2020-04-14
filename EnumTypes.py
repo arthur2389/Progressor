@@ -16,3 +16,8 @@ class EStage(Enum):
     START = 1
     CURRENT = 2
     END = 3
+
+
+class ETermType(Enum):
+    REGULAR = 1
+    ENUMERATED = 2

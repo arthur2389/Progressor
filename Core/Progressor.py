@@ -6,7 +6,6 @@
 from Core.Goal.GoalFactory import GoalFactory
 from Core.Goal.GoalSketelon import GoalSkeleton
 from Framework.ExpandWithFramework import ExpandWithFramework
-from EnumTypes import *
 
 
 class Progressor(metaclass=ExpandWithFramework):
