@@ -14,21 +14,21 @@ class GoalFactory(metaclass=ExpandWithFramework):
     """
 
     @classmethod
-    def create_goal(cls, progressor, data):
+    def create_goal(cls, progressor, skeleton):
         # first - check for the numeric types
-        if data.type in [int, float]:
-            return QuantifiedGoal(progressor, data)
+        if skeleton.type in [int, float]:
+            return QuantifiedGoal(progressor, skeleton)
         # second - check if the goal represents a time value
-        if cls.fw.time_handler.is_time_format(data.start_value):
-            return TimeBasedGoal(progressor, data)
+        if cls.fw.time_handler.is_time_format(skeleton.start_value):
+            return TimeBasedGoal(progressor, skeleton)
         # now the input has to be string otherwise it is a bug - the string can be enumerated or not
-        elif data.type is str:
+        elif skeleton.type is str:
             # in the input - a dictionary means that the terms are enumerated, unless the values are all zeros
-            if data.terms and all(val == 0 for val in data.terms.values()):
-                return TermBasedGoal(progressor, data)
-            return EnumeratedTermsGoal(progressor, data)
+            if skeleton.terms and all(val == 0 for val in skeleton.terms.values()):
+                return TermBasedGoal(progressor, skeleton)
+            return EnumeratedTermsGoal(progressor, skeleton)
         # invalid state will lead to creation of Null goal. it was made to prevent immediate failure
-        return NullGoal(progressor, data)
+        return NullGoal(progressor, skeleton)
 
 
 class NullGoal(Goal):

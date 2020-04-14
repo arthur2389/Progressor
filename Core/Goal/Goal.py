@@ -56,21 +56,21 @@ class Goal(metaclass=ExpandWithFramework):
             return (self._stages[EStage.CURRENT] - self._stages[EStage.START]) \
                        / (self._stages[EStage.END] - self._stages[EStage.START])
 
-    def __init__(self, progressor, data):
+    def __init__(self, progressor, skeleton):
         """
         param progressor: progressor object that built the goal - for mediation purposes (Progressor)
         param data: creation data object (GoalSkeleton)
         """
         self._progressor = progressor
-        self._name = data.goal_name
+        self._name = skeleton.goal_name
         self._values = None
-        self._skeleton = data
-        self._dates = self._Stages(st=data.start_date,
+        self._skeleton = skeleton
+        self._dates = self._Stages(st=skeleton.start_date,
                                    curr=self.fw.date_handler.today(),
-                                   end=data.end_date)
-        self._values = self._Stages(st=self._data_process(data.start_value),
-                                    curr=self._data_process(data.curr_value),
-                                    end=self._data_process(data.goal_value))
+                                   end=skeleton.end_date)
+        self._values = self._Stages(st=self._data_process(skeleton.start_value),
+                                    curr=self._data_process(skeleton.curr_value),
+                                    end=self._data_process(skeleton.goal_value))
 
         self._status = self._define_status()
 

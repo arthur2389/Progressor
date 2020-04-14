@@ -28,5 +28,5 @@ if __name__ == '__main__':
                                             status=inp['status'],
                                             terms=inp['terms'])
         if new_goal_winII.exec_():
-            progressor.add_goal(creation_data=new_goal_winII.goal_raw_data)
+            progressor.add_goal(skeleton=new_goal_winII.goal_raw_data)
             pass

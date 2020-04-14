@@ -25,13 +25,13 @@ class Progressor(metaclass=ExpandWithFramework):
         """
         return self._goals.items()
 
-    def add_goal(self, creation_data):
+    def add_goal(self, skeleton):
         """
         Add new goal
         param creation_data: gaol creation data
         """
-        g = self.factory.create_goal(self, creation_data)
-        self._goals.update({creation_data.goal_name: g})
+        g = self.factory.create_goal(self, skeleton)
+        self._goals.update({skeleton.goal_name: g})
         self.dump_to_database(g)
 
     def remove_goal(self, name):
@@ -71,6 +71,6 @@ class Progressor(metaclass=ExpandWithFramework):
         goals = {}
         goal_data = self.fw.data_moderator.get_data()
         for name, goal in goal_data.items():
-            data = GoalSkeleton.build_from_loaded_data(name, goal)
-            goals.update({name: self.factory.create_goal(self, data)})
+            skeleton = GoalSkeleton.build_from_loaded_data(name, goal)
+            goals.update({name: self.factory.create_goal(self, skeleton)})
         return goals

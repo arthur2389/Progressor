@@ -18,8 +18,8 @@ class GoalSkeleton(metaclass=ExpandWithFramework):
         param data_as_dict: goal data as dict (dict)
         return: GoalSkeleton loaded object
         """
-        data_as_dict["start_date"] = cls.fw.date_handler.date_from_str(data_as_dict["start_date"])
-        data_as_dict["end_date"] = cls.fw.date_handler.date_from_str(data_as_dict["end_date"])
+        for field in ["start_date", "end_date"]:
+            data_as_dict[field] = cls.fw.date_handler.date_from_str(data_as_dict[field])
         return cls(goal_name=name, **data_as_dict)
 
     def __init__(self, goal_name, start_date, end_date, start_value, goal_value, curr_value=None, terms=None):
@@ -55,13 +55,12 @@ class GoalSkeleton(metaclass=ExpandWithFramework):
         """
         return: dict representation - mainly for dump operations
         """
-        all_fields = {"start_date": str(self.start_date),
-                      "end_date": str(self.end_date),
-                      "start_value": self.start_value,
-                      "goal_value": self.goal_value,
-                      "curr_value": self.curr_value,
-                      "terms": self.terms}
-        return {k: v for k, v in all_fields.items() if v is not None}
+        return {"start_date": str(self.start_date),
+                "end_date": str(self.end_date),
+                "start_value": self.start_value,
+                "goal_value": self.goal_value,
+                "curr_value": self.curr_value,
+                "terms": self.terms}
 
     def __repr__(self):
         return str(self.goal_name) + ": " + str(self.as_dict())
