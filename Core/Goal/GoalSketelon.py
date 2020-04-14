@@ -5,7 +5,7 @@
 from Framework.ExpandWithFramework import ExpandWithFramework
 
 
-class CreationData(metaclass=ExpandWithFramework):
+class GoalSkeleton(metaclass=ExpandWithFramework):
     """
     Raw data of the goals. Generic to all goal types
     """
@@ -13,10 +13,10 @@ class CreationData(metaclass=ExpandWithFramework):
     @classmethod
     def build_from_dict(cls, name, data_as_dict):
         """
-        Build CreationData object from dictionary. Useful when loading data of the database
+        Build GoalSkeleton object from dictionary. Useful when loading data of the database
         param name: goal name (str)
         param data_as_dict: goal data as dict (dict)
-        return: CreationData loaded object
+        return: GoalSkeleton loaded object
         """
         return cls(goal_name=name, **data_as_dict)
 

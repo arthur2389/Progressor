@@ -3,7 +3,7 @@ from Framework.DataModerator.JsonIO import JsonIO
 
 
 def goal_data(goal):
-    d = goal.data.as_dict()
+    d = goal.skeleton.as_dict()
     d.update({'status': goal.status.value,
               'completion %': goal.completion_rate(),
               'completion % projection at end date ': goal.completion_projection_at_end()})

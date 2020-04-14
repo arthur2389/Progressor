@@ -4,7 +4,7 @@
 # Date: April 2020
 
 from Core.Goal.GoalFactory import GoalFactory
-from Core.DataTransferTypes.CreationData import CreationData
+from Core.Goal.GoalSketelon import GoalSkeleton
 from Framework.ExpandWithFramework import ExpandWithFramework
 from EnumTypes import *
 
@@ -80,7 +80,7 @@ class Progressor(metaclass=ExpandWithFramework):
         param goal: goal to sump to database
         """
         self.fw.data_moderator.write_data(parameter=goal.goal_name,
-                                          new_data=goal.data.as_dict())
+                                          new_data=goal.skeleton.as_dict())
 
     def _load_goals(self):
         """
@@ -90,6 +90,6 @@ class Progressor(metaclass=ExpandWithFramework):
         goals = {}
         goal_data = self.fw.data_moderator.get_data()
         for name, goal in goal_data.items():
-            data = CreationData.build_from_dict(name, goal)
+            data = GoalSkeleton.build_from_dict(name, goal)
             goals.update({name: self.factory.create_goal(self, data)})
         return goals

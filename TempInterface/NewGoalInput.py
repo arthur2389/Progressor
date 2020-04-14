@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from TempInterface.ProgressorDialog import ProgressorDialog
-from Core.DataTransferTypes.CreationData import CreationData
+from Core.Goal.GoalSketelon import GoalSkeleton
 from EnumTypes import *
 
 
@@ -143,12 +143,12 @@ class NewGoalInputPartI(ProgressorDialog):
                                                     self._if_user_enumerates_terms))
         self._term_list = self.fw.widgets.PrListWidget()
         layout.addWidget(self._term_list)
-        self._new_term = self._button()
+        self._new_term = self._new_term_button()
         layout.addWidget(self._new_term)
 
         return layout
 
-    def _button(self):
+    def _new_term_button(self):
         button = QPushButton()
         button.setIcon(QIcon(self.fw.data_moderator.get_icon_path(name="add_line")))
         button.setFixedWidth(70)
@@ -295,7 +295,7 @@ class NewGoalInputPartII(ProgressorDialog):
         start_date = self.dt_start
         end_date = self.dt_end
 
-        self._goal_raw_data = CreationData(goal_name=name,
+        self._goal_raw_data = GoalSkeleton(goal_name=name,
                                            start_date=start_date,
                                            end_date=end_date,
                                            start_value=vs,

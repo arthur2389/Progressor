@@ -59,12 +59,12 @@ class Goal(metaclass=ExpandWithFramework):
     def __init__(self, progressor, data):
         """
         param progressor: progressor object that built the goal - for mediation purposes (Progressor)
-        param data: creation data object (CreationData)
+        param data: creation data object (GoalSkeleton)
         """
         self._progressor = progressor
         self._name = data.goal_name
         self._values = None
-        self._data = data
+        self._skeleton = data
         self._dates = self._Stages(st=self.fw.date_handler.date_from_str(data.start_date),
                                    curr=self.fw.date_handler.today(),
                                    end=self.fw.date_handler.date_from_str(data.end_date))
@@ -75,11 +75,11 @@ class Goal(metaclass=ExpandWithFramework):
         self._status = self._define_status()
 
     @property
-    def data(self):
+    def skeleton(self):
         """
-        return: goals raw data (CreationData)
+        return: goals raw data (GoalSkeleton)
         """
-        return self._data
+        return self._skeleton
 
     @property
     def status(self):
@@ -100,7 +100,7 @@ class Goal(metaclass=ExpandWithFramework):
         param item: attribute to get
         return: attribute value
         """
-        return getattr(self._data, item)
+        return getattr(self._skeleton, item)
 
     def set_curr_value(self, val):
         """
@@ -115,7 +115,7 @@ class Goal(metaclass=ExpandWithFramework):
         val = self.fw.types.try_float_cast(val)
         # update both in the stages object and in raw data
         self._values[EStage.CURRENT] = self._data_process(val)
-        self._data.curr_value = val
+        self._skeleton.curr_value = val
         # use progressor to update the database
         self._progressor.dump_to_database(self)
 
@@ -210,4 +210,4 @@ class EnumeratedTermsGoal(Goal):
     """
 
     def _data_process(self, v):
-        return float(self._data.terms[v])
+        return float(self._skeleton.terms[v])
