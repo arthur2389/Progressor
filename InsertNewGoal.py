@@ -20,12 +20,11 @@ if __name__ == '__main__':
     progressor = Progressor()
     app = QApplication(sys.argv)
     app.setFont(_font())
-    new_goal_winI = NewGoalFirstPhase(progressor)
+    new_goal_winI = NewGoalFirstPhase()
     if new_goal_winI.exec_():
         inp = new_goal_winI.goal_init_data
         new_goal_winII = NewGoalSecondPhase(goal_name=inp['name'],
-                                            start_date=inp['start_date'],
-                                            end_date=inp['end_date'],
+                                            date_input=inp['date_input'],
                                             status=inp['status'],
                                             terms=inp['terms'])
         if new_goal_winII.exec_():

@@ -7,12 +7,12 @@ from EnumTypes import *
 
 class NewGoalSecondPhase(ProgressorDialog):
 
-    def __init__(self, goal_name, start_date, end_date, status, terms):
+    def __init__(self, goal_name, date_input, status, terms):
         super(NewGoalSecondPhase, self).__init__()
 
         self.goal_name = goal_name
-        self.dt_start = start_date
-        self.dt_end = end_date
+        self.dt_start = date_input.start_date
+        self.dt_end = date_input.end_date
         self.status = status
         self.terms = terms
 

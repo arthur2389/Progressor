@@ -4,6 +4,8 @@
 # Date: April 2020
 
 from os import path
+import copy
+
 import root
 from Framework.DataModerator.JsonIO import JsonIO
 
@@ -42,8 +44,8 @@ class DataModerator(object):
         """
         file_data = JsonIO.read(path.join(self._path_database, group))
         if not parameter:
-            return file_data
-        return file_data[parameter]
+            return copy.deepcopy(file_data)
+        return copy.deepcopy(file_data[parameter])
 
     def write_data(self, parameter, new_data, group='GoalList'):
         """

@@ -55,25 +55,6 @@ class Progressor(metaclass=ExpandWithFramework):
         except KeyError:
             raise KeyError('goal with name {0} does not exists'.format(name))
 
-    def check_dates_define_status(self, date_st, date_end):
-        """
-        param date_st:
-        param date_end:
-        return:
-        """
-        today = self.fw.date_handler.today()
-        date_st = self.fw.date_handler.date_from_str(date_st)
-        date_end = self.fw.date_handler.date_from_str(date_end)
-
-        if date_st >= date_end:
-            raise NotImplemented('start date should be before the end date')
-
-        if today <= date_st:
-            return EGoalStatus.NOT_STARTED
-        elif today > date_end:
-            return EGoalStatus.FINISHED
-        return EGoalStatus.IN_PROGRESS
-
     def dump_to_database(self, goal):
         """
         Append goal data to the database
@@ -90,6 +71,6 @@ class Progressor(metaclass=ExpandWithFramework):
         goals = {}
         goal_data = self.fw.data_moderator.get_data()
         for name, goal in goal_data.items():
-            data = GoalSkeleton.build_from_dict(name, goal)
+            data = GoalSkeleton.build_from_loaded_data(name, goal)
             goals.update({name: self.factory.create_goal(self, data)})
         return goals

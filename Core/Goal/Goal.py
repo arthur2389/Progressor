@@ -65,9 +65,9 @@ class Goal(metaclass=ExpandWithFramework):
         self._name = data.goal_name
         self._values = None
         self._skeleton = data
-        self._dates = self._Stages(st=self.fw.date_handler.date_from_str(data.start_date),
+        self._dates = self._Stages(st=data.start_date,
                                    curr=self.fw.date_handler.today(),
-                                   end=self.fw.date_handler.date_from_str(data.end_date))
+                                   end=data.end_date)
         self._values = self._Stages(st=self._data_process(data.start_value),
                                     curr=self._data_process(data.curr_value),
                                     end=self._data_process(data.goal_value))
