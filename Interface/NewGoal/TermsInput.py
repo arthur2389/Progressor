@@ -43,7 +43,7 @@ class TermsInput(metaclass=ExpandWithFramework):
         rc_menu = QMenu(self.term_list)
 
         delete_term = QAction("Delete {}".format(item.text()), rc_menu)
-        delete_term.triggered.connect(lambda: self.term_list.takeItem(self.term_list.row(item)))
+        delete_term.triggered.connect(lambda: self.term_list.remove_item(item))
 
         rc_menu.addAction(delete_term)
         font = QFont()
@@ -73,18 +73,6 @@ class TermsInput(metaclass=ExpandWithFramework):
         if ':' in term and len(term.split(':')) == 2:
             return ETermType.ENUMERATED
         return ETermType.REGULAR
-
-
-class TermItem(QListWidgetItem):
-
-    def __init__(self, dialog_box, term_type, icon_func):
-        super(TermItem, self).__init__(dialog_box.new_term)
-        if term_type == ETermType.ENUMERATED:
-            icon_name = 'blue_arrow'
-        else:
-            icon_name = 'blank_arrow'
-        self.setIcon(QIcon(icon_func(name=icon_name)))
-        self.dialog_box = dialog_box
 
 
 class AddTerm(ProgressorDialog):
@@ -137,3 +125,14 @@ class AddEnumeratedTerm(ProgressorDialog):
         self._new_term = '{0}: {1}'.format(self._term_entry.text(), self._value_entry.text())
         QDialog.accept(self)
 
+
+class TermItem(QListWidgetItem):
+
+    def __init__(self, dialog_box, term_type, icon_func):
+        super(TermItem, self).__init__(dialog_box.new_term)
+        if term_type == ETermType.ENUMERATED:
+            icon_name = 'blue_arrow'
+        else:
+            icon_name = 'blank_arrow'
+        self.setIcon(QIcon(icon_func(name=icon_name)))
+        self.dialog_box = dialog_box

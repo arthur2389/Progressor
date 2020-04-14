@@ -48,7 +48,7 @@ class NewGoalFirstPhase(ProgressorDialog):
 
         vlayout.addWidget(add_terms)
         vlayout.addSpacing(15)
-        self._buttons = self._get_dialog_buttons(vlayout)
+        self._buttons = self._get_dialog_buttons(vlayout, ok_name='Continue to set values')
         return vlayout
 
     def _if_user_defines_terms(self, state):

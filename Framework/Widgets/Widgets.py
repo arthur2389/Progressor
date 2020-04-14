@@ -20,6 +20,9 @@ class PrListWidget(QListWidget):
                 print(e)
         super(PrListWidget, self).mousePressEvent(QMouseEvent)
 
+    def remove_item(self, item):
+        self.takeItem(self.row(item))
+
     def __iter__(self):
         for i in range(self.count()):
             yield self.item(i)

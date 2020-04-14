@@ -61,9 +61,13 @@ class ProgressorDialog(QDialog):
 
         self.adjustSize()
 
-    def _get_dialog_buttons(self, _layout):
-        button_box = QDialogButtonBox(QDialogButtonBox.Ok|
+    def _get_dialog_buttons(self, _layout, ok_name='Ok', cancel_name='Cancel'):
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok |
                                       QDialogButtonBox.Cancel)
+
+        button_box.button(QDialogButtonBox.Ok).setText(ok_name)
+        button_box.button(QDialogButtonBox.Cancel).setText(cancel_name)
+
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         _layout.addWidget(button_box, alignment=Qt.AlignCenter)
